@@ -333,7 +333,52 @@ public class SQLite {
         }
         return false;
     }
-     
+    public boolean checkLockUser(String username){
+        String sql = "SELECT id, username, password, role, locked FROM users WHERE username=?";
+        User user = null;
+        
+
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                user = new User(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("role"),
+                        rs.getInt("locked"));
+                System.out.println(user.getUsername());
+            }
+            if(user != null){
+                if(user.getLocked() == 1){
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false; 
+    }
+    public boolean lockUser(String username){
+        String sql = "UPDATE users SET locked = 1 WHERE username = ?";
+        int res;
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            res = pstmt.executeUpdate();
+            
+            if(res > 0){
+                return true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+   
     public void addUser(String username, String password, int role) {
         String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
         
