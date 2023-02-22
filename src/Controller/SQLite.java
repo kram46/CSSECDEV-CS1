@@ -283,7 +283,6 @@ public class SQLite {
     public boolean checkUser(String username, String password){
         String sql = "SELECT id, username, password, role, locked FROM users WHERE username=? AND password=?";
         User user = null;
-        
 
         try{
             Connection conn = DriverManager.getConnection(driverURL);

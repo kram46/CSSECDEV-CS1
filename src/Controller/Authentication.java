@@ -4,6 +4,8 @@
  */
 package Controller;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -13,15 +15,30 @@ package Controller;
 public class Authentication {
     
     SQLite sqlite = new SQLite();
+
     
     public boolean loginAuth(String username, String password){
-        return sqlite.checkUser(username, password);
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            return sqlite.checkUser(username, new String(md.digest(password.getBytes())));
+        }catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     public boolean registerAuth(String username, String password){
-        if(!sqlite.checkUsernameExist(username)){
-            sqlite.addUser(username, password);
-            return true;
+        try{
+            System.out.println(password);
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            if(!sqlite.checkUsernameExist(username)){
+                byte[] bytePassword = password.getBytes();
+                bytePassword = md.digest(bytePassword);
+                sqlite.addUser(username, new String(bytePassword));
+                return true;
+            }
+        }catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
         }
         return false;
     }
