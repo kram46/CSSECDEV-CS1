@@ -18,5 +18,17 @@ public class Authentication {
         return sqlite.checkUser(username, password);
     }
     
+    public boolean registerAuth(String username, String password){
+        if(!sqlite.checkUsernameExist(username)){
+            sqlite.addUser(username, password);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean unametest(String username){
+        return sqlite.checkUsernameExist(username);
+    }
+    
     
 }
