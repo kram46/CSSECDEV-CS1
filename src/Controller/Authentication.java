@@ -26,12 +26,8 @@ public class Authentication {
         return false;
     }
     
-    public boolean lockUser(String username){
-        return (sqlite.lockUser(username));
-    }
-    
-    public boolean isLocked(String username){
-        return sqlite.checkLockUser(username);
+    public boolean unametest(String username){
+        return sqlite.checkUsernameExist(username);
     }
     
     
