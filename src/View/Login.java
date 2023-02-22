@@ -7,7 +7,7 @@ public class Login extends javax.swing.JPanel {
 
     public Frame frame;
     private Authentication auth = new Authentication();
-    
+    private int lockoutThreshhold = 5;
     public Login() {
         initComponents();
     }
@@ -98,16 +98,24 @@ public class Login extends javax.swing.JPanel {
         String username = usernameFld.getText().toLowerCase();
         String password = passwordFld.getText();
         
-        usernameFld.setText("");
+
         passwordFld.setText("");
-        
-        if(auth.loginAuth(username,password)){
+        if(auth.isLocked(username)){
+            errorLbl.setText("Error, account is locked. Contact your IT Department.");
+        }else if(auth.loginAuth(username,password)){
+            usernameFld.setText("");
             frame.mainNav();
-            
             errorLbl.setText("");
         }else{
-              // display failed auth
-             errorLbl.setText("Error, username and password combination does not exist.");
+            lockoutThreshhold--;
+            errorLbl.setText("Error, username and password combination does not exist.");
+        }
+        
+        if(lockoutThreshhold == 0){
+            if(auth.lockUser(username)){
+                errorLbl.setText(("Account has been locked."));
+            }
+            lockoutThreshhold = 5;
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 
