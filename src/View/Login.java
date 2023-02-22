@@ -55,7 +55,7 @@ public class Login extends javax.swing.JPanel {
         });
 
         errorLbl.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        errorLbl.setForeground(new java.awt.Color(178, 48, 48));
+        errorLbl.setForeground(java.awt.Color.red);
         errorLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         errorLbl.setName("lblLoginErr"); // NOI18N
 
@@ -90,8 +90,8 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(errorLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addComponent(errorLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(79, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
