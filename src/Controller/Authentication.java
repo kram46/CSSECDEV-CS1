@@ -27,6 +27,11 @@ public class Authentication {
         return false;
     }
     
+    public int roleAuth(String username){
+        
+        return (sqlite.checkRole(username));
+    }
+    
     public boolean registerAuth(String username, String password){
         try{
             System.out.println(password);

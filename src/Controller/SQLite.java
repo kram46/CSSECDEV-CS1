@@ -360,6 +360,33 @@ public class SQLite {
         }
         return false; 
     }
+    
+     public int checkRole(String username){
+        String sql = "SELECT id, username, password, role, locked FROM users WHERE username=?";
+        User user = null;
+        
+
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                user = new User(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("role"),
+                        rs.getInt("locked"));
+                System.out.println(user.getRole());
+            }
+            if(user != null)
+                return user.getRole();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
     public boolean lockUser(String username){
         String sql = "UPDATE users SET locked = 1 WHERE username = ?";
         int res;

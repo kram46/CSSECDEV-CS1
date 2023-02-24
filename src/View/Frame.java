@@ -1,6 +1,8 @@
 package View;
 
+import Controller.Authentication;
 import Controller.Main;
+import Controller.SQLite;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -11,6 +13,7 @@ public class Frame extends javax.swing.JFrame {
     public Frame() {
         initComponents();
     }
+ 
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -180,23 +183,23 @@ public class Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adminBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminBtnActionPerformed
-        adminHomePnl.showPnl("home");
-        contentView.show(Content, "adminHomePnl");
+        // adminHomePnl.showPnl("home");
+        // contentView.show(Content, "adminHomePnl");
     }//GEN-LAST:event_adminBtnActionPerformed
 
     private void managerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managerBtnActionPerformed
-        managerHomePnl.showPnl("home");
-        contentView.show(Content, "managerHomePnl");
+        // managerHomePnl.showPnl("home");
+        // contentView.show(Content, "managerHomePnl");
     }//GEN-LAST:event_managerBtnActionPerformed
 
     private void staffBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staffBtnActionPerformed
-        staffHomePnl.showPnl("home");
-        contentView.show(Content, "staffHomePnl");
+        // staffHomePnl.showPnl("home");
+        // contentView.show(Content, "staffHomePnl");
     }//GEN-LAST:event_staffBtnActionPerformed
 
     private void clientBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientBtnActionPerformed
-        clientHomePnl.showPnl("home");
-        contentView.show(Content, "clientHomePnl");
+        // clientHomePnl.showPnl("home");
+        // contentView.show(Content, "clientHomePnl");
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
@@ -214,7 +217,8 @@ public class Frame extends javax.swing.JFrame {
     
     private CardLayout contentView = new CardLayout();
     private CardLayout frameView = new CardLayout();
-    
+        
+    private Authentication auth = new Authentication();
     public void init(Main controller){
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("CSSECDV - SECURITY Svcs");
@@ -223,6 +227,7 @@ public class Frame extends javax.swing.JFrame {
         this.main = controller;
         loginPnl.frame = this;
         registerPnl.frame = this;
+    
         
         adminHomePnl.init(main.sqlite);
         clientHomePnl.init(main.sqlite);
@@ -243,7 +248,12 @@ public class Frame extends javax.swing.JFrame {
         
         this.setVisible(true);
     }
-    
+    public void setPanelVisibility(boolean adminHomeVisible, boolean managerHomeVisible, boolean staffHomeVisible, boolean clientHomeVisible) {
+       adminHomePnl.setVisible(adminHomeVisible);
+        managerHomePnl.setVisible(managerHomeVisible);
+        staffHomePnl.setVisible(staffHomeVisible);
+        clientHomePnl.setVisible(clientHomeVisible);
+    }
     public void mainNav(){
         frameView.show(Container, "homePnl");
     }
