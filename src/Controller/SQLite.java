@@ -374,7 +374,19 @@ public class SQLite {
         }
         return false; 
     }
-    
+    public void updatePassword(String username, String newPassword){
+        String sql = "UPDATE users SET password = ? WHERE username = ?";
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, username);
+            pstmt.executeUpdate();
+        } catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+    }
      public int checkRole(String username){
         String sql = "SELECT id, username, password, role, locked FROM users WHERE username=?";
         User user = null;
@@ -467,6 +479,7 @@ public class SQLite {
         
         
     }
+  
     
     
 }

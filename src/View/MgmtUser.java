@@ -15,7 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 /**
  *
  * @author beepxD
@@ -78,6 +79,7 @@ public class MgmtUser extends javax.swing.JPanel {
         deleteBtn = new javax.swing.JButton();
         lockBtn = new javax.swing.JButton();
         chgpassBtn = new javax.swing.JButton();
+       
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -134,13 +136,18 @@ public class MgmtUser extends javax.swing.JPanel {
             }
         });
 
+      
+
         chgpassBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         chgpassBtn.setText("CHANGE PASS");
         chgpassBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chgpassBtnActionPerformed(evt);
             }
+
         });
+
+      
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -220,20 +227,50 @@ public class MgmtUser extends javax.swing.JPanel {
         if(table.getSelectedRow() >= 0){
             JTextField password = new JPasswordField();
             JTextField confpass = new JPasswordField();
+            errorLbl = new javax.swing.JLabel();
             designer(password, "PASSWORD");
             designer(confpass, "CONFIRM PASSWORD");
-            
+            int column = 0;
+            String username = table.getModel().getValueAt(table.getSelectedRow(), column).toString();
             Object[] message = {
-                "Enter New Password:", password, confpass
+                "Enter New Password:", password, confpass, errorLbl
             };
-
+            System.out.println("USERNAME CHANGE PASS: "+ username);
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-            
+            String passwordTxt = password.getText();
+            String confpassTxt = confpass.getText();
             if (result == JOptionPane.OK_OPTION) {
-                System.out.println(password.getText());
-                System.out.println(confpass.getText());
+                if(passwordTxt.equals(confpassTxt)){
+                    if(passwordTxt.isEmpty()) {
+                        System.out.println("Password cannot be empty.");
+                        return;
+                    }
+                    else if(passwordTxt.length() < 6 || !passwordTxt.matches(".*\\d+.*")) {
+                        System.out.println("Password must be at least 6 characters and must contain at least 1 number");
+                        return;
+                    }
+                    else{
+                        MessageDigest md;
+                        try {
+                            md = MessageDigest.getInstance("SHA-256");
+                            byte[] bytePassword = passwordTxt.getBytes();
+                            bytePassword = md.digest(bytePassword);
+                            System.out.println("CHANGED PASSWORD SUCESSFULLY!");
+                            sqlite.updatePassword(username, new String(bytePassword));
+                        } catch (NoSuchAlgorithmException e) {
+                            
+                            e.printStackTrace();
+                        }
+                      
+                    }
+                  
+                }
+                else{
+                    System.out.println("Passwords do not match.");
+                }
             }
         }
+        
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
 
@@ -244,5 +281,6 @@ public class MgmtUser extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton lockBtn;
     private javax.swing.JTable table;
+    private javax.swing.JLabel errorLbl;
     // End of variables declaration//GEN-END:variables
 }
