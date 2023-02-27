@@ -227,19 +227,25 @@ public class MgmtUser extends javax.swing.JPanel {
         if(table.getSelectedRow() >= 0){
             JTextField password = new JPasswordField();
             JTextField confpass = new JPasswordField();
+            JTextField adminpass = new JPasswordField();
             errorLbl = new javax.swing.JLabel();
             designer(password, "PASSWORD");
             designer(confpass, "CONFIRM PASSWORD");
+            designer(adminpass, "ADMIN PASSWORD");
             int column = 0;
             String username = table.getModel().getValueAt(table.getSelectedRow(), column).toString();
             Object[] message = {
-                "Enter New Password:", password, confpass, errorLbl
+                "Enter New Password:", password, confpass, adminpass
             };
             System.out.println("USERNAME CHANGE PASS: "+ username);
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             String passwordTxt = password.getText();
             String confpassTxt = confpass.getText();
+            String adminPassTxt = adminpass.getText();
+            MessageDigest md;
+          
             if (result == JOptionPane.OK_OPTION) {
+               
                 if(passwordTxt.equals(confpassTxt)){
                     if(passwordTxt.isEmpty()) {
                         System.out.println("Password cannot be empty.");
@@ -250,13 +256,18 @@ public class MgmtUser extends javax.swing.JPanel {
                         return;
                     }
                     else{
-                        MessageDigest md;
+                       
                         try {
                             md = MessageDigest.getInstance("SHA-256");
+                            byte[] adminbytePassword = adminPassTxt.getBytes();
+                            adminbytePassword = md.digest(adminbytePassword);
                             byte[] bytePassword = passwordTxt.getBytes();
                             bytePassword = md.digest(bytePassword);
-                            System.out.println("CHANGED PASSWORD SUCESSFULLY!");
-                            sqlite.updatePassword(username, new String(bytePassword));
+                            if(sqlite.updatePassword(username, new String(bytePassword), new String(adminbytePassword))){
+                                System.out.println("CHANGED PASSWORD SUCESSFULLY!");
+                            };
+                           
+                            
                         } catch (NoSuchAlgorithmException e) {
                             
                             e.printStackTrace();

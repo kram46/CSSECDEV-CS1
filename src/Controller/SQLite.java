@@ -374,19 +374,34 @@ public class SQLite {
         }
         return false; 
     }
-    public void updatePassword(String username, String newPassword){
+    public boolean updatePassword(String username, String newPassword, String adminPassword){
         String sql = "UPDATE users SET password = ? WHERE username = ?";
+        String adminCheck = "SELECT id FROM users WHERE password = ? AND role = 5";
         try{
             Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql);
+            PreparedStatement adminpstmt = conn.prepareStatement(adminCheck);
             pstmt.setString(1, newPassword);
             pstmt.setString(2, username);
-            pstmt.executeUpdate();
+            adminpstmt.setString(1, adminPassword);
+            ResultSet rs = adminpstmt.executeQuery();
+            if(rs.next()){
+                pstmt.executeUpdate();
+                conn.close();
+                return true;
+            }
+                
+            else{
+                System.out.println("ADMIN PASSWORD INCORRECT.");
+                conn.close();
+              
+            }
         } catch(Exception ex){
             ex.printStackTrace();
         }
-        
+        return false;
     }
+
      public int checkRole(String username){
         String sql = "SELECT id, username, password, role, locked FROM users WHERE username=?";
         User user = null;
