@@ -110,18 +110,19 @@ public class Login extends javax.swing.JPanel {
 
         if(lockoutThreshhold == 0){
             if(auth.lockUser(username)){
-                errorLbl.setText(("Account has been locked."));
+                
             }
         }
         
         passwordFld.setText("");
         
         if(auth.isLocked(username)){
-            errorLbl.setText("Error, account is locked. Contact your IT Department.");
+            errorLbl.setText("Error, username and password combination does not exist.");
         }else if(auth.loginAuth(username,password)){
+            this.resetLockoutThreshhold();
             usernameFld.setText("");
-            frame.mainNav();
             errorLbl.setText("");
+            frame.mainNav();
         }else{
             lockoutThreshhold--;
             errorLbl.setText("Error, username and password combination does not exist.");
@@ -153,6 +154,9 @@ public class Login extends javax.swing.JPanel {
         frame.registerNav();
     }//GEN-LAST:event_registerBtnActionPerformed
 
+    private void resetLockoutThreshhold(){
+        this.lockoutThreshhold = 5;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel errorLbl;
     private javax.swing.JLabel jLabel1;
