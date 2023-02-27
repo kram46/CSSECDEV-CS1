@@ -251,8 +251,8 @@ public class MgmtUser extends javax.swing.JPanel {
                         System.out.println("Password cannot be empty.");
                         return;
                     }
-                    else if(passwordTxt.length() < 6 || !passwordTxt.matches(".*\\d+.*")) {
-                        System.out.println("Password must be at least 6 characters and must contain at least 1 number");
+                    else if(passwordTxt.length() < 8 || !passwordTxt.matches(".*\\d+.*")) {
+                        System.out.println("Password must be at least 8 characters and must contain at least 1 number");
                         return;
                     }
                     else{

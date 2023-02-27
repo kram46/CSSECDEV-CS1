@@ -137,10 +137,10 @@ public class Register extends javax.swing.JPanel {
             return;
         }
 
-        else if(password.length() < 6 || !password.matches(".*\\d+.*")) {
+        else if(password.length() < 8 || !password.matches(".*\\d+.*")) {
             passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); 
 
-            errorLbl.setText("Password must be at least 6 characters and must contain at least 1 number");
+            errorLbl.setText("Password must be at least 8 characters and must contain at least 1 number");
             return;
         }
 
