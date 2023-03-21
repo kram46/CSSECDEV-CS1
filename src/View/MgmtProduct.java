@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.Authorization;
 import Controller.SQLite;
 import Model.Product;
 import java.util.ArrayList;

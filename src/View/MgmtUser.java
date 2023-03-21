@@ -32,11 +32,11 @@ public class MgmtUser extends javax.swing.JPanel {
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
         
-//        UNCOMMENT TO DISABLE BUTTONS
-//        editBtn.setVisible(false);
-//        deleteBtn.setVisible(false);
-//        lockBtn.setVisible(false);
-//        chgpassBtn.setVisible(false);
+    //    UNCOMMENT TO DISABLE BUTTONS
+    //    editBtn.setVisible(false);
+    //    deleteBtn.setVisible(false);
+    //    lockBtn.setVisible(false);
+    //    chgpassBtn.setVisible(false);
     }
     
     public void init(){
@@ -192,8 +192,12 @@ public class MgmtUser extends javax.swing.JPanel {
                 "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
             
             if(result != null){
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                System.out.println(result.charAt(0));
+              String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+              int role = Integer.parseInt(String.valueOf(result.charAt(0)));
+
+              sqlite.editRole(username, role);
+              init();
+              
             }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
@@ -203,7 +207,8 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                init();
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
@@ -218,7 +223,12 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                if(state.equals("lock"))
+                    sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                else{
+                    sqlite.unlockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                }
+                init();
             }
         }
     }//GEN-LAST:event_lockBtnActionPerformed
@@ -279,6 +289,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 else{
                     System.out.println("Passwords do not match.");
                 }
+                init();
             }
         }
         

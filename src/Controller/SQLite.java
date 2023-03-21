@@ -176,6 +176,7 @@ public class SQLite {
             pstmt.setString(4, timestamp);
             
             int rs = pstmt.executeUpdate();
+            conn.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -311,8 +312,11 @@ public class SQLite {
                         rs.getInt("role"),
                         rs.getInt("locked"));
             }
-            if(user != null)
+            if(user != null){
+                conn.close();
                 return true;
+            }
+              
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -336,7 +340,6 @@ public class SQLite {
                         rs.getString("password"),
                         rs.getInt("role"),
                         rs.getInt("locked"));
-                System.out.println(user.getUsername());
             }
             if(user != null)
                 return true;
@@ -362,7 +365,6 @@ public class SQLite {
                         rs.getString("password"),
                         rs.getInt("role"),
                         rs.getInt("locked"));
-                System.out.println(user.getUsername());
             }
             if(user != null){
                 if(user.getLocked() == 1){
@@ -405,7 +407,7 @@ public class SQLite {
      public int checkRole(String username){
         String sql = "SELECT id, username, password, role, locked FROM users WHERE username=?";
         User user = null;
-        
+        int role = 0;
 
         try{
             Connection conn = DriverManager.getConnection(driverURL);
@@ -418,10 +420,32 @@ public class SQLite {
                         rs.getString("password"),
                         rs.getInt("role"),
                         rs.getInt("locked"));
-                System.out.println(user.getRole());
+                role = user.getRole();
             }
-            if(user != null)
-                return user.getRole();
+            conn.close();
+         
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+      
+        return role;
+    }
+
+    public int editRole(String username, int role){
+        String sql = "UPDATE users SET role = ? WHERE username = ?";
+        
+
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, role);
+            pstmt.setString(2, username);
+            
+       
+            pstmt.executeUpdate();
+            conn.close();
+          
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -438,6 +462,26 @@ public class SQLite {
             res = pstmt.executeUpdate();
             
             if(res > 0){
+                conn.close();
+                return true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return false;
+    }
+    public boolean unlockUser(String username){
+        String sql = "UPDATE users SET locked = 0 WHERE username = ?";
+        int res;
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            res = pstmt.executeUpdate();
+            
+            if(res > 0){
+                conn.close();
                 return true;
             }
         } catch (Exception ex) {
@@ -445,7 +489,6 @@ public class SQLite {
         }
         return false;
     }
-   
     public void addUser(String username, String password, int role) {
         String sql = "INSERT INTO users(username,password,role) VALUES(?,?,?)";
         
@@ -468,7 +511,11 @@ public class SQLite {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, username);
             
-            int rs = pstmt.executeUpdate();
+            pstmt.executeUpdate();
+
+            System.out.println("user" + username + "has been successfully removed.");
+            conn.close();
+            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -495,6 +542,19 @@ public class SQLite {
         
     }
   
+    public void clearLogs(){
+        
+        String sql = "DELETE FROM logs";
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate(sql);
+            conn.close();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+       
+    }
     
     
 }

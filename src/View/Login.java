@@ -107,7 +107,6 @@ public class Login extends javax.swing.JPanel {
         String username = usernameFld.getText().toLowerCase();
         String password = passwordFld.getText();
    
-        System.out.println("role:"+auth.roleAuth(username));
          
 
         if(lockoutThreshhold == 0){
@@ -129,7 +128,6 @@ public class Login extends javax.swing.JPanel {
             lockoutThreshhold--;
             errorLbl.setText("Error, username and password combination does not exist.");
         }
-        
         if(auth.roleAuth(username) == 2){
             frame.setPanelVisibility(false,false,false,true);
             frame.setVisible(true);
