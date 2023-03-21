@@ -2,6 +2,8 @@
 package View;
 
 import Controller.Authentication;
+import Controller.Authorization;
+import Controller.Main;
 import java.awt.CardLayout;
 
 public class Login extends javax.swing.JPanel {
@@ -145,7 +147,9 @@ public class Login extends javax.swing.JPanel {
             frame.setPanelVisibility(true,false,false,false);
             frame.setVisible(true);
         }
-
+        Authorization.loggedInUsername = username;
+        Authorization.loggedInRole = auth.roleAuth(username);
+        
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
