@@ -486,13 +486,74 @@ public class SQLite {
             product = new Product(rs.getString("name"),
                                   rs.getInt("stock"),
                                   rs.getFloat("price"));
+            conn.close();
             
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return product;
+    }
+    
+    public boolean updateProduct(String name, int stock, double price){
+        String sql = "UPDATE product SET stock = ?, price = ? WHERE name = ?";
+        int res;
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+  
+            pstmt.setInt(1, stock);
+            pstmt.setDouble(2, price);
+            pstmt.setString(3, name);
+            res = pstmt.executeUpdate();
+            
+            conn.close();
+            if(res > 0){
+                conn.close();
+                return true;
+            }
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         
+        return false;
+    }
+    
+    public boolean purchaseProduct(String name, int stockRemaining){
+        String sql = "UPDATE product SET stock = ? WHERE name = ?";
+        int res;
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+  
+            pstmt.setInt(1, stockRemaining);
+            pstmt.setString(2, name);
+            res = pstmt.executeUpdate();
+            
+            conn.close();
+            if(res > 0){
+                conn.close();
+                return true;
+            }
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         
+        return false;
+    }
+    
+    public void removeProduct(String name){
+        String sql = "DELETE FROM product WHERE name=?";        
+        try{
+            Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            int rs = pstmt.executeUpdate();
+            conn.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
   
     
