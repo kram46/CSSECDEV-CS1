@@ -6,7 +6,8 @@ package Controller;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  *
@@ -20,7 +21,11 @@ public class Authentication {
     public boolean loginAuth(String username, String password){
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            return sqlite.checkUser(username, new String(md.digest(password.getBytes())));
+            if (sqlite.checkUser(username, new String(md.digest(password.getBytes())))){
+                sqlite.addLogs("NOTICE", username, "Login Successful",  new Timestamp(new Date().getTime()).toString());
+                return true;
+            }
+                
         }catch(NoSuchAlgorithmException e){
             e.printStackTrace();
         }
@@ -28,18 +33,18 @@ public class Authentication {
     }
     
     public int roleAuth(String username){
-        
+  
         return (sqlite.checkRole(username));
     }
     
     public boolean registerAuth(String username, String password){
         try{
-            System.out.println(password);
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             if(!sqlite.checkUsernameExist(username)){
                 byte[] bytePassword = password.getBytes();
                 bytePassword = md.digest(bytePassword);
                 sqlite.addUser(username, new String(bytePassword));
+                sqlite.addLogs("NOTICE", username, "User creation successful",  new Timestamp(new Date().getTime()).toString());
                 return true;
             }
         }catch(NoSuchAlgorithmException e){

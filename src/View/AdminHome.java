@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package View;
+import Controller.Authorization;
 //[255,102,51]
 import Controller.SQLite;
 import Model.History;

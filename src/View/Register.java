@@ -2,11 +2,13 @@
 package View;
 
 import Controller.Authentication;
+import Controller.SQLite;
 
 public class Register extends javax.swing.JPanel {
 
     public Frame frame;
     private Authentication auth = new Authentication();
+    private SQLite sqlite = new SQLite();
     public Register() {
         initComponents();
     }

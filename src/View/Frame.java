@@ -254,6 +254,7 @@ public class Frame extends javax.swing.JFrame {
         staffHomePnl.setVisible(staffHomeVisible);
         clientHomePnl.setVisible(clientHomeVisible);
     }
+    
     public void mainNav(){
         frameView.show(Container, "homePnl");
     }
