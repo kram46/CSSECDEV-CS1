@@ -52,6 +52,30 @@ public class MgmtProduct extends javax.swing.JPanel {
                 products.get(nCtr).getStock(), 
                 products.get(nCtr).getPrice()});
         }
+        
+        checkAuthorizationAccess();
+        
+    }
+    
+    private void checkAuthorizationAccess(){
+        if(Authorization.loggedInRole == 1){
+            this.setButtonVisiblity(false, false, false, false);
+        }else if(Authorization.loggedInRole == 2){
+            this.setButtonVisiblity(false, false, false, true);
+        }else if(Authorization.loggedInRole == 3){
+            this.setButtonVisiblity(true, true, true, false);
+        }else if(Authorization.loggedInRole == 4){
+            this.setButtonVisiblity(true, true, true, false);
+        }else if(Authorization.loggedInRole == 5){
+            this.setButtonVisiblity(false, false, false, false);
+        }
+    }
+    
+    private void setButtonVisiblity(boolean add, boolean edit, boolean del, boolean purchase){
+        addBtn.setVisible(add);
+        editBtn.setVisible(edit);
+        deleteBtn.setVisible(del);
+        purchaseBtn.setVisible(purchase);
     }
     
     public void designer(JTextField component, String text){
@@ -200,7 +224,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                                                             "Purchase of " + String.valueOf(stock) + " " + name + " successful.");
 
                             String ts = Utils.getCurrTime().toString();
-    //                        sqlite.addHistory(username, name, stock, ts);
+                            sqlite.addHistory(Authorization.loggedInUsername, name, stock, ts);
                             System.out.println(ts);
                             this.init();
                         }
@@ -258,7 +282,8 @@ public class MgmtProduct extends javax.swing.JPanel {
             Object[] message = {
                 "Edit Product Details:", nameFld, stockFld, priceFld
             };
-
+            
+            String old_name = nameFld.getText();
             int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
             if (result == JOptionPane.OK_OPTION) {
@@ -267,7 +292,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                     int stock = Math.absExact(Integer.parseInt(stockFld.getText()));
                     double price =  Math.abs(Double.parseDouble(priceFld.getText()));
 
-                    sqlite.updateProduct(name, stock, price);
+                    sqlite.updateProduct(old_name, name, stock, price);
     //                System.out.println(nameFld.getText());
     //                System.out.println(stockFld.getText());
     //                System.out.println(priceFld.getText());

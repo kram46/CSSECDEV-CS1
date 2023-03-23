@@ -215,6 +215,7 @@ public class SQLite {
     
     
     public ArrayList<History> getHistory(){
+        System.out.print("HERE2");
         String sql = "SELECT id, username, name, stock, timestamp FROM history";
         ArrayList<History> histories = new ArrayList<History>();
         
@@ -229,6 +230,30 @@ public class SQLite {
                                    rs.getInt("stock"),
                                    rs.getString("timestamp")));
             }
+            conn.close();
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+        return histories;
+    }
+    
+    public ArrayList<History> getHistory(String username){
+        System.out.print("Here1");
+        String sql = "SELECT id, username, name, stock, timestamp FROM history where username = ?";
+        ArrayList<History> histories = new ArrayList<History>();
+        
+        try (Connection conn = DriverManager.getConnection(driverURL)){
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery(sql);
+            while (rs.next()) {
+                histories.add(new History(rs.getInt("id"),
+                                   rs.getString("username"),
+                                   rs.getString("name"),
+                                   rs.getInt("stock"),
+                                   rs.getString("timestamp")));
+            }
+            conn.close();
         } catch (Exception ex) {
             System.out.print(ex);
         }
@@ -541,9 +566,19 @@ public class SQLite {
         return product;
     }
     
-    public boolean updateProduct(String name, int stock, double price){
-        String sql = "UPDATE product SET stock = ?, price = ? WHERE name = ?";
+    public boolean updateProduct(String old, String name, int stock, double price){
+        
+        String sql;
+        boolean diffName;
         int res;
+        
+        if(old.equalsIgnoreCase(name)){
+            sql = "UPDATE product SET stock = ?, price = ? WHERE name = ?";
+            diffName = false;
+        }else{
+            sql = "UPDATE product SET stock = ?, price = ?, name = ? WHERE name = ?";
+            diffName = true;
+        }
         try{
             Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -551,11 +586,11 @@ public class SQLite {
             pstmt.setInt(1, stock);
             pstmt.setDouble(2, price);
             pstmt.setString(3, name);
+            if(diffName) pstmt.setString(4, old);
             res = pstmt.executeUpdate();
             
             conn.close();
             if(res > 0){
-                conn.close();
                 return true;
             }
             
