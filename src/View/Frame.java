@@ -3,6 +3,7 @@ package View;
 import Controller.Authentication;
 import Controller.Main;
 import Controller.SQLite;
+import Controller.Authorization;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -183,23 +184,23 @@ public class Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adminBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminBtnActionPerformed
-        // adminHomePnl.showPnl("home");
-        // contentView.show(Content, "adminHomePnl");
+         adminHomePnl.showPnl("home");
+         contentView.show(Content, "adminHomePnl");
     }//GEN-LAST:event_adminBtnActionPerformed
 
     private void managerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managerBtnActionPerformed
-        // managerHomePnl.showPnl("home");
-        // contentView.show(Content, "managerHomePnl");
+         managerHomePnl.showPnl("home");
+         contentView.show(Content, "managerHomePnl");
     }//GEN-LAST:event_managerBtnActionPerformed
 
     private void staffBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staffBtnActionPerformed
-        // staffHomePnl.showPnl("home");
-        // contentView.show(Content, "staffHomePnl");
+         staffHomePnl.showPnl("home");
+         contentView.show(Content, "staffHomePnl");
     }//GEN-LAST:event_staffBtnActionPerformed
 
     private void clientBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientBtnActionPerformed
-        // clientHomePnl.showPnl("home");
-        // contentView.show(Content, "clientHomePnl");
+         clientHomePnl.showPnl("home");
+         contentView.show(Content, "clientHomePnl");
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
@@ -253,6 +254,13 @@ public class Frame extends javax.swing.JFrame {
         managerHomePnl.setVisible(managerHomeVisible);
         staffHomePnl.setVisible(staffHomeVisible);
         clientHomePnl.setVisible(clientHomeVisible);
+    }
+    
+    public void setButtonVisibility(boolean client, boolean staff, boolean manager, boolean admin){
+        this.clientBtn.setVisible(client);
+        this.staffBtn.setVisible(staff);
+        this.managerBtn.setVisible(manager);
+        this.adminBtn.setVisible(admin);
     }
     
     public void mainNav(){

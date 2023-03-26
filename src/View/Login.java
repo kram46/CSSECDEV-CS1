@@ -130,19 +130,23 @@ public class Login extends javax.swing.JPanel {
         }
         if(auth.roleAuth(username) == 2){
             frame.setPanelVisibility(false,false,false,true);
+            frame.setButtonVisibility(true, false, false, false);
             frame.setVisible(true);
-           
+            
         }
         else if (auth.roleAuth(username) == 3){
             frame.setPanelVisibility(false,false,true,false);
+            frame.setButtonVisibility(false, true, false, false);
             frame.setVisible(true);
         }
         else if (auth.roleAuth(username) == 4){
             frame.setPanelVisibility(false,true,false,false);
+            frame.setButtonVisibility(false, false, true, false);
             frame.setVisible(true);
         }
         else if (auth.roleAuth(username) == 5){
             frame.setPanelVisibility(true,false,false,false);
+            frame.setButtonVisibility(false, false, false, true);
             frame.setVisible(true);
         }
         Authorization.loggedInUsername = username;
