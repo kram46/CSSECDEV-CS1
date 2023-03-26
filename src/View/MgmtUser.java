@@ -8,6 +8,8 @@ package View;
 import Controller.SQLite;
 import Model.User;
 import java.util.ArrayList;
+import java.util.Date;
+
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -17,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 /**
  *
  * @author beepxD
@@ -196,6 +199,10 @@ public class MgmtUser extends javax.swing.JPanel {
               int role = Integer.parseInt(String.valueOf(result.charAt(0)));
 
               sqlite.editRole(username, role);
+              if(sqlite.DEBUG_MODE == 1){
+                System.out.println("SUCCESSFULLY EDITED USER");
+                }
+                sqlite.addLogs("NOTICE", tableModel.getValueAt(table.getSelectedRow(), 0).toString(), "Edited Role", new Timestamp(new Date().getTime()).toString());
               init();
               
             }
@@ -204,11 +211,16 @@ public class MgmtUser extends javax.swing.JPanel {
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         if(table.getSelectedRow() >= 0){
+
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
                 sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
                 init();
+                if(sqlite.DEBUG_MODE == 1){
+                    System.out.println("SUCCESSFULLY DELETED USER");
+                }
+                sqlite.addLogs("NOTICE", tableModel.getValueAt(table.getSelectedRow(), 0).toString(), "Deleted User", new Timestamp(new Date().getTime()).toString());
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
@@ -223,10 +235,21 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
-                if(state.equals("lock"))
+                if(state.equals("lock")){
+                   
                     sqlite.lockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                    if(sqlite.DEBUG_MODE == 1){
+                        System.out.println("SUCCESSFULLY LOCKED USER");
+                    }
+                    sqlite.addLogs("NOTICE", tableModel.getValueAt(table.getSelectedRow(), 0).toString(), "Locked User", new Timestamp(new Date().getTime()).toString());
+                }
+                    
                 else{
                     sqlite.unlockUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                    if(sqlite.DEBUG_MODE == 1){
+                        System.out.println("SUCCESSFULLY UNLOCKED USER");
+                    }
+                    sqlite.addLogs("NOTICE", tableModel.getValueAt(table.getSelectedRow(), 0).toString(), "Unlocked User", new Timestamp(new Date().getTime()).toString());
                 }
                 init();
             }
@@ -247,7 +270,6 @@ public class MgmtUser extends javax.swing.JPanel {
             Object[] message = {
                 "Enter New Password:", password, confpass, adminpass
             };
-            System.out.println("USERNAME CHANGE PASS: "+ username);
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             String passwordTxt = password.getText();
             String confpassTxt = confpass.getText();
@@ -274,7 +296,12 @@ public class MgmtUser extends javax.swing.JPanel {
                             byte[] bytePassword = passwordTxt.getBytes();
                             bytePassword = md.digest(bytePassword);
                             if(sqlite.updatePassword(username, new String(bytePassword), new String(adminbytePassword))){
-                                System.out.println("CHANGED PASSWORD SUCESSFULLY!");
+                                if(sqlite.DEBUG_MODE == 1){
+                                    System.out.println("CHANGED PASSWORD SUCESSFULLY!");
+                                
+                                }
+                                sqlite.addLogs("NOTICE", username, "Changed Password Successfully", new Timestamp(new Date().getTime()).toString());
+                                
                             };
                            
                             

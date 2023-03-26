@@ -5,13 +5,17 @@ import Controller.Authentication;
 import Controller.Authorization;
 import Controller.Main;
 import java.awt.CardLayout;
+import java.sql.Timestamp;
+import java.util.Date;
+
+import Controller.SQLite;
 
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
     private Authentication auth = new Authentication();
     int lockoutThreshhold = 5;
-    
+    public SQLite sqlite = new SQLite();
     public Login() {
         initComponents();
     }
@@ -118,6 +122,7 @@ public class Login extends javax.swing.JPanel {
         passwordFld.setText("");
         
         if(auth.isLocked(username)){
+            sqlite.addLogs("NOTICE", username, "Failed Login", new Timestamp(new Date().getTime()).toString());
             errorLbl.setText("Error, username and password combination does not exist.");
         }else if(auth.loginAuth(username,password)){
             this.resetLockoutThreshhold();
@@ -126,6 +131,7 @@ public class Login extends javax.swing.JPanel {
             frame.mainNav();
         }else{
             lockoutThreshhold--;
+            sqlite.addLogs("NOTICE", username, "Failed Login", new Timestamp(new Date().getTime()).toString());
             errorLbl.setText("Error, username and password combination does not exist.");
         }
         if(auth.roleAuth(username) == 2){
