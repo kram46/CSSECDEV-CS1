@@ -488,6 +488,7 @@ public class SQLite {
             
             if(res > 0){
                 conn.close();
+                addLogs("NOTICE", username, "Login Successful",  new Timestamp(new Date().getTime()).toString());
                 return true;
             }
         } catch (Exception ex) {
@@ -538,7 +539,6 @@ public class SQLite {
             
             pstmt.executeUpdate();
 
-            System.out.println("user" + username + "has been successfully removed.");
             conn.close();
             
         } catch (Exception ex) {
