@@ -272,7 +272,9 @@ public class MgmtProduct extends javax.swing.JPanel {
                 int stock = Math.absExact(Integer.parseInt(stockFld.getText()));
                 double price = Math.abs(Double.parseDouble(priceFld.getText()));
 
-                sqlite.addProduct(name,stock,price);
+                if(name.matches("^[a-zA-Z0-9_]*$")){
+                    sqlite.addProduct(name,stock,price);
+                }
                 System.out.println(nameFld.getText());
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
@@ -305,8 +307,10 @@ public class MgmtProduct extends javax.swing.JPanel {
                     String name = nameFld.getText().strip();
                     int stock = Math.absExact(Integer.parseInt(stockFld.getText()));
                     double price =  Math.abs(Double.parseDouble(priceFld.getText()));
+                    if(name.matches("^[a-zA-Z0-9_]*$")){
+                        sqlite.updateProduct(old_name, name, stock, price);  
+                    }
 
-                    sqlite.updateProduct(old_name, name, stock, price);
     //                System.out.println(nameFld.getText());
     //                System.out.println(stockFld.getText());
     //                System.out.println(priceFld.getText());

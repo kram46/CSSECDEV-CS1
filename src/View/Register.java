@@ -154,6 +154,10 @@ public class Register extends javax.swing.JPanel {
             confpassFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true), "CONFIRM PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
             return;
         }
+        
+        else if (!usernameFld.getText().toLowerCase().matches("(?=[\\.,<>]).")){
+            errorLbl.setText("The symbols . , < > are not allowed.");
+        }
 
         else if(auth.registerAuth(usernameFld.getText().toLowerCase(),passwordFld.getText())){
             usernameFld.setText("");
