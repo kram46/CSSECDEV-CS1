@@ -50,8 +50,10 @@ public class MgmtHistory extends javax.swing.JPanel {
         if(Authorization.loggedInRole == 2 || Authorization.loggedInRole == 4){
             ArrayList<History> history = (Authorization.loggedInRole == 2) ?
                                                 sqlite.getHistory(Authorization.loggedInUsername) : sqlite.getHistory();
-            System.out.println("ZXC");
+            System.out.println("LOAD HISTORY MANAGER");
+            System.out.println(history.size());
             for(int nCtr = 0; nCtr < history.size(); nCtr++){
+                System.out.println(history.get(nCtr).getName());
                 Product product = sqlite.getProduct(history.get(nCtr).getName());
                 tableModel.addRow(new Object[]{
                     history.get(nCtr).getUsername(), 

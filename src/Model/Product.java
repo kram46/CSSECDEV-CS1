@@ -15,18 +15,39 @@ public class Product {
     private String name;
     private int stock;
     private float price;
+    private boolean visible;
     
     public Product(String name, int stock, float price){
         this.name = name;
         this.stock = stock;
         this.price = price;
+        this.visible = true;
     }
+    
+    public Product(String name, int stock, float price, int visible){
+        this.name = name;
+        this.stock = stock;
+        this.price = price;
+        if(visible == 0) this.visible = false;
+        else this.visible = true;
+    }
+    
     
     public Product(int id, String name, int stock, float price){
         this.id = id;
         this.name = name;
         this.stock = stock;
         this.price = price;
+        this.visible = true;
+    }
+    
+    public Product(int id, String name, int stock, float price, int visible){
+        this.id = id;
+        this.name = name;
+        this.stock = stock;
+        this.price = price;
+        if(visible == 0) this.visible = false;
+        else this.visible = true;
     }
     
     public int getId() {
@@ -59,5 +80,13 @@ public class Product {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+    
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+    
+    public boolean isVisible() {
+        return visible;
     }
 }

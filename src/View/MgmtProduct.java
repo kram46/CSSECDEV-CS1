@@ -47,6 +47,7 @@ public class MgmtProduct extends javax.swing.JPanel {
 //      LOAD CONTENTS
         ArrayList<Product> products = sqlite.getProduct();
         for(int nCtr = 0; nCtr < products.size(); nCtr++){
+            if(products.get(nCtr).isVisible())
             tableModel.addRow(new Object[]{
                 products.get(nCtr).getName(), 
                 products.get(nCtr).getStock(), 
