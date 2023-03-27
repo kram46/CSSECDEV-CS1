@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.util.Date;
 import java.sql.Timestamp;
+import javax.swing.JCheckBox;
 /**
  *
  * @author beepxD
@@ -46,12 +47,23 @@ public class MgmtProduct extends javax.swing.JPanel {
         
 //      LOAD CONTENTS
         ArrayList<Product> products = sqlite.getProduct();
+        if(Authorization.loggedInRole == 2) tableModel.setColumnCount(3);
         for(int nCtr = 0; nCtr < products.size(); nCtr++){
-            if(products.get(nCtr).isVisible())
-            tableModel.addRow(new Object[]{
-                products.get(nCtr).getName(), 
-                products.get(nCtr).getStock(), 
-                products.get(nCtr).getPrice()});
+            if(Authorization.loggedInRole == 2){
+                if(products.get(nCtr).isVisible()){
+                    tableModel.addRow(new Object[]{
+                        products.get(nCtr).getName(), 
+                        products.get(nCtr).getStock(), 
+                        products.get(nCtr).getPrice()});
+                }
+            }else if(Authorization.loggedInRole == 4){
+                    tableModel.addRow(new Object[]{
+                        products.get(nCtr).getName(), 
+                        products.get(nCtr).getStock(), 
+                        products.get(nCtr).getPrice(),
+                        products.get(nCtr).isVisible()});
+            }
+
         }
         
         checkAuthorizationAccess();
@@ -106,17 +118,17 @@ public class MgmtProduct extends javax.swing.JPanel {
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Name", "Stock", "Price"
+                "Name", "Stock", "Price", "Visible"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -130,6 +142,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             table.getColumnModel().getColumn(0).setMinWidth(50);
             table.getColumnModel().getColumn(1).setMaxWidth(100);
             table.getColumnModel().getColumn(2).setMaxWidth(100);
+            table.getColumnModel().getColumn(3).setMaxWidth(50);
         }
 
         purchaseBtn.setBackground(new java.awt.Color(255, 255, 255));
@@ -308,12 +321,20 @@ public class MgmtProduct extends javax.swing.JPanel {
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         if(table.getSelectedRow() >= 0){
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE PRODUCT", JOptionPane.YES_NO_OPTION);
+            String message =  "Are you sure you want to delete " +
+                    tableModel.getValueAt(table.getSelectedRow(), 0) +
+                    "?";
+            JCheckBox chkbox = new JCheckBox("Remove from database?");
+            Object[] params = { message, chkbox} ;
+            int result = JOptionPane.showConfirmDialog(null, 
+                    params, "DELETE PRODUCT", JOptionPane.YES_NO_OPTION);
             
-            if (result == JOptionPane.YES_OPTION) {
-                String name = String.valueOf(tableModel.getValueAt(table.getSelectedRow(), 0));
-                sqlite.removeProduct(name);
+            String name = String.valueOf(tableModel.getValueAt(table.getSelectedRow(), 0));
+            if (result == JOptionPane.YES_OPTION && chkbox.isSelected()) {
+                sqlite.deleteProduct(name);
                 System.out.println(name);
+            }else if (result == JOptionPane.YES_OPTION){
+                sqlite.removeProduct(name);
             }
             this.init();
         }

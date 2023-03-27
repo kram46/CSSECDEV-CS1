@@ -162,7 +162,6 @@ public class SQLite {
             pstmt.setString(4, timestamp);
             
             int rs = pstmt.executeUpdate();
-            pstmt.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -229,8 +228,6 @@ public class SQLite {
             pstmt.setString(2, password);
             
             int rs = pstmt.executeUpdate();
-            pstmt.close();
-            conn.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -289,9 +286,6 @@ public class SQLite {
                                    rs.getInt("stock"),
                                    rs.getString("timestamp")));
             }
-            
-            rs.close();
-            conn.close();
         } catch (Exception ex) {
             System.out.print(ex);
         } finally {
@@ -320,8 +314,6 @@ public class SQLite {
                                    rs.getString("desc"),
                                    rs.getString("timestamp")));
             }
-            conn.close();
-            rs.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -348,10 +340,8 @@ public class SQLite {
                                    rs.getString("name"),
                                    rs.getInt("stock"),
                                    rs.getFloat("price"),
-                    rs.getInt("visible")));
+                                 rs.getInt("visible")));
             }
-            conn.close();
-            rs.close();
         } catch (Exception ex) {
             System.out.print(ex);
         } finally {
@@ -380,8 +370,6 @@ public class SQLite {
                                    rs.getInt("role"),
                                    rs.getInt("locked")));
             }
-            conn.close();
-            rs.close();
         } catch (Exception ex) {ex.printStackTrace();}
         finally {
             try{
@@ -414,10 +402,7 @@ public class SQLite {
                 conn.close();
                 return true;
             }
-            conn.close();
-            rs.close();
-              
-
+          
         } catch (SQLException ex) {
             ex.printStackTrace();
         }finally {
@@ -447,8 +432,6 @@ public class SQLite {
                         rs.getInt("role"),
                         rs.getInt("locked"));
             }
-            rs.close();
-            conn.close();
             if(user != null)
                 return true;
 
@@ -485,8 +468,6 @@ public class SQLite {
                     return true;
                 }
             }
-            rs.close();
-            conn.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }finally {
@@ -551,9 +532,6 @@ public class SQLite {
                         rs.getInt("locked"));
                 role = user.getRole();
             }
-            rs.close();
-            conn.close();
-         
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -578,9 +556,6 @@ public class SQLite {
             pstmt.setString(2, username);
        
             pstmt.executeUpdate();
-            
-            conn.close();
-            pstmt.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -607,8 +582,6 @@ public class SQLite {
                 addLogs("NOTICE", username, "Login Successful",  new Timestamp(new Date().getTime()).toString());
                 return true;
             }
-            conn.close();
-            pstmt.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -636,8 +609,6 @@ public class SQLite {
                 return true;
             }
             
-            conn.close();
-            pstmt.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -659,9 +630,7 @@ public class SQLite {
             pstmt.setString(2, password);
             pstmt.setInt(3, role);        
             int rs = pstmt.executeUpdate();
-            
-            conn.close();
-            pstmt.close();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -682,9 +651,6 @@ public class SQLite {
             pstmt.setString(1, username);
             
             pstmt.executeUpdate();
-
-            conn.close();
-            pstmt.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -746,8 +712,6 @@ public class SQLite {
             if(diffName) pstmt.setString(4, old);
             res = pstmt.executeUpdate();
             
-            conn.close();
-            pstmt.close();
             if(res > 0){
                 return true;
             }
@@ -777,9 +741,7 @@ public class SQLite {
             pstmt.setString(2, name);
             res = pstmt.executeUpdate();
             
-            conn.close();
             if(res > 0){
-                
                 return true;
             }
             
@@ -796,30 +758,8 @@ public class SQLite {
         return false;
     }
     
-    public void removeProduct(String name){
-//        String sql = "DELETE FROM product WHERE name=?";        
-//        Connection conn = null;
-//        try{
-//            conn = DriverManager.getConnection(driverURL);
-//            PreparedStatement pstmt = conn.prepareStatement(sql);
-//            pstmt.setString(1, name);
-//            int rs = pstmt.executeUpdate();
-//            conn.close();
-//            pstmt.close();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        } finally {
-//            try{
-//                conn.close();
-//            }catch (Exception ex){
-//                ex.printStackTrace();
-//            }
-//        }
-        this._deleteProduct(name);
-    }
-    
-    public boolean _deleteProduct(String name){
-        
+    public boolean removeProduct(String name){
+                
         String sql;
         boolean diffName;
         int res;
@@ -847,6 +787,49 @@ public class SQLite {
         
         return false;
     }
+    
+    public void deleteProduct(String name){
+        String sql = "DELETE FROM product WHERE name=?";        
+        Connection conn = null;
+        try{
+            conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            int rs = pstmt.executeUpdate();
+           
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try{
+                conn.close();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        
+        this.deleteProductFromHistory(name);
+
+    }
+    
+    public void deleteProductFromHistory(String name){
+        String sql = "DELETE FROM history WHERE name=?";        
+        Connection conn = null;
+        try{
+            conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            int rs = pstmt.executeUpdate();
+           
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try{
+                conn.close();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+    }
     public void clearLogs(){
         
         String sql = "DELETE FROM logs";
@@ -855,8 +838,6 @@ public class SQLite {
             conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(sql);
-            conn.close();
-            stmt.close();
         }catch (Exception ex) {
             ex.printStackTrace();
         } finally {
