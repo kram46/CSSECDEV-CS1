@@ -155,7 +155,7 @@ public class Register extends javax.swing.JPanel {
             return;
         }
         
-        else if (!usernameFld.getText().toLowerCase().matches("(?=[\\.,<>]).")){
+        else if (usernameFld.getText().toLowerCase().matches("(?=[\\.,<>]).")){
             errorLbl.setText("The symbols . , < > are not allowed.");
         }
 
